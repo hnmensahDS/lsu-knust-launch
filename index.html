@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="Official website unveiling of the KNUST Law Students’ Union.">
+  <title>KNUST Law Students’ Union | Official Website Launch</title>
+  <style>
+    :root {
+      --ink: #050505;
+      --ink-soft: #111111;
+      --paper: #ffffff;
+      --mist: #f3f3f3;
+      --accent: #dedede;
+      --accent-strong: #ffffff;
+      --muted-light: rgba(255,255,255,.52);
+      --muted-dark: #747474;
+      --border-light: rgba(255,255,255,.16);
+      --ease: cubic-bezier(.22,1,.36,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html,body { width: 100%; min-height: 100%; margin: 0; }
+    html { background: var(--ink); }
+    body { color: #fff; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; overflow-x: hidden; overflow-y: auto; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; font: inherit; }
+    a { color: inherit; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 6px; }
+    .app { min-height: 100svh; min-height: 100dvh; position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; background: var(--ink); transition: background 1000ms ease, color 1000ms ease; }
+    .app::before { content: ""; position: absolute; inset: 0; z-index: -3; background: radial-gradient(ellipse 60% 75% at 50% 49%, rgba(255,255,255,.047), transparent 76%), radial-gradient(circle at 82% 14%, rgba(255,255,255,.024), transparent 27%); transition: opacity 900ms ease; }
+    .app::after { content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .13; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.27'/%3E%3C/svg%3E"); }
+    .gridlines { position: absolute; inset: 0; pointer-events: none; z-index: -1; background: linear-gradient(to right, transparent calc(8% - 1px), rgba(255,255,255,.055) 8%, transparent calc(8% + 1px), transparent calc(92% - 1px), rgba(255,255,255,.055) 92%, transparent calc(92% + 1px)), linear-gradient(to bottom, transparent calc(14% - 1px), rgba(255,255,255,.045) 14%, transparent calc(14% + 1px), transparent calc(85% - 1px), rgba(255,255,255,.045) 85%, transparent calc(85% + 1px)); transition: opacity 700ms ease; }
+    .halo { position: absolute; z-index: -1; width: min(74vw, 810px); aspect-ratio: 1; top: 48%; left: 50%; transform: translate(-50%, -50%); border: 1px solid rgba(255,255,255,.1); border-radius: 50%; box-shadow: 0 0 0 90px rgba(255,255,255,.013), 0 0 0 190px rgba(255,255,255,.01); pointer-events: none; transition: opacity 1000ms ease; }
+    .site-header, .site-footer { position: relative; z-index: 20; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+    .site-header { padding: clamp(23px, 3.3vw, 49px) clamp(24px, 5vw, 88px) 0; gap: 22px; }
+    .brand { display: inline-flex; align-items: center; gap: 17px; min-width: 0; text-decoration: none; }
+    .brand-seal { width: 46px; height: 46px; flex: none; color: var(--accent-strong); border: 1px solid rgba(255,255,255,.54); border-radius: 50%; display: grid; place-items: center; }
+    .brand-seal svg { width: 28px; height: 28px; }
+    .brand-name { display: grid; gap: 5px; text-transform: uppercase; letter-spacing: .12em; line-height: 1.18; }
+    .brand-name strong { font-size: clamp(10px, .96vw, 14px); font-weight: 670; }
+    .brand-name span { color: var(--muted-light); letter-spacing: .24em; font-size: clamp(8px, .73vw, 10px); }
+    .corner-label { color: var(--muted-light); text-transform: uppercase; font-size: 10px; font-weight: 600; letter-spacing: .23em; text-align: right; }
+    .corner-label b { display: block; color: var(--accent); font-size: 10px; font-weight: 600; letter-spacing: .24em; margin-top: 7px; }
+    .stage-container { flex: 1; display: grid; grid-template-areas: "stage"; place-items: center; min-height: 530px; position: relative; z-index: 4; padding: 32px 18px 34px; }
+    .stage { grid-area: stage; width: 100%; max-width: 1180px; text-align: center; visibility: hidden; opacity: 0; transform: translateY(17px) scale(.99); pointer-events: none; transition: opacity 630ms var(--ease), transform 630ms var(--ease), visibility 0s linear 630ms; }
+    .app[data-stage="ready"] .stage-ready, .app[data-stage="counting"] .stage-countdown, .app[data-stage="revealed"] .stage-reveal { visibility: visible; opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; transition-delay: 0s; }
+    .eyebrow { color: var(--accent); text-transform: uppercase; font-size: clamp(10px, .95vw, 13px); letter-spacing: .32em; font-weight: 650; }
+    .hairline { height: 1px; width: 48px; background: var(--accent); opacity: .85; margin: 21px auto 25px; }
+    .ready-title, .reveal-title { font-family: "Iowan Old Style", "Baskerville", "Palatino Linotype", Georgia, serif; font-weight: 400; letter-spacing: -.055em; line-height: .99; margin: 0 auto 25px; }
+    .ready-title { font-size: clamp(58px, 8.6vw, 142px); max-width: 1120px; }
+    .ready-title em, .reveal-title em { font-weight: 400; color: var(--accent-strong); font-style: italic; }
+    .ready-desc { font-size: clamp(15px, 1.35vw, 18px); color: rgba(255,255,255,.63); line-height: 1.65; max-width: 600px; margin: 0 auto 38px; }
+    .primary-action { display: inline-flex; align-items: center; justify-content: center; gap: 19px; padding: 19px 28px; background: var(--accent-strong); color: #070707; font-weight: 700; font-size: 13px; letter-spacing: .09em; text-transform: uppercase; border: 1px solid transparent; min-width: 252px; transition: transform 230ms ease, background 230ms ease, box-shadow 230ms ease; text-decoration: none; }
+    .primary-action:hover { transform: translateY(-3px); background: #e8e8e8; box-shadow: 0 12px 40px rgba(255,255,255,.14); }
+    .primary-action svg { width: 19px; height: 19px; }
+    .helper { margin: 22px auto 0; font-size: 11px; color: rgba(255,255,255,.41); letter-spacing: .045em; }
+    .countdown-meta { margin-bottom: 26px; }
+    .countdown-ring { width: clamp(290px, 40vh, 490px); height: clamp(290px, 40vh, 490px); max-width: 78vw; max-height: 78vw; margin: 0 auto 31px; position: relative; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--accent-strong) var(--progress, 0deg), rgba(255,255,255,.13) 0); box-shadow: 0 0 100px rgba(255,255,255,.065); }
+    .countdown-ring::before { content:""; position: absolute; inset: 3px; border-radius: 50%; background: var(--ink); }
+    .countdown-ring::after { content:""; position: absolute; inset: 22px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; }
+    .countdown-digit { position: relative; z-index: 1; display: block; font-family: "Iowan Old Style", "Baskerville", Georgia, serif; font-weight: 400; font-size: clamp(158px, 27vh, 300px); line-height: 1; letter-spacing: -.075em; color: #fff; padding-right: .09em; text-shadow: 0 0 70px rgba(255,255,255,.12); font-variant-numeric: lining-nums tabular-nums; }
+    .countdown-digit.pulse { animation: digit-pulse 620ms var(--ease) both; }
+    @keyframes digit-pulse { from { opacity: .25; transform: translateY(14px) scale(1.11); filter: blur(5px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+    .countdown-caption { text-transform: uppercase; letter-spacing: .3em; font-size: clamp(10px, 1vw, 13px); font-weight: 600; color: rgba(255,255,255,.65); }
+    .countdown-caption strong { font-weight: 600; color: var(--accent-strong); }
+    .tick-track { display: flex; justify-content: center; gap: 9px; margin: 27px auto 0; }
+    .tick { width: clamp(17px, 3.5vw, 37px); height: 3px; background: rgba(255,255,255,.15); transition: background 260ms ease; }
+    .tick.complete { background: var(--accent-strong); }
+    .site-footer { min-height: 80px; padding: 0 clamp(24px, 5vw, 88px) clamp(20px, 2.7vw, 36px); gap: 20px; }
+    .footer-copy { font-size: 10px; text-transform: uppercase; letter-spacing: .18em; color: rgba(255,255,255,.43); }
+    .controls { display: flex; align-items: center; justify-content: flex-end; gap: 9px; }
+    .control { height: 38px; min-width: 38px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid var(--border-light); border-radius: 2px; background: rgba(255,255,255,.025); color: rgba(255,255,255,.77); font-size: 11px; font-weight: 600; letter-spacing: .06em; transition: background 170ms, border-color 170ms; }
+    .control:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.34); }
+    .control svg { width: 15px; height: 15px; }
+    .control.is-hidden { display: none; }
+    .app[data-stage="counting"] #restart { display: none; }
+    .app[data-stage="revealed"] { background: var(--paper); color: var(--ink); }
+    .app[data-stage="revealed"]::before { opacity: 0; }
+    .app[data-stage="revealed"] .gridlines { opacity: .15; filter: invert(1); }
+    .app[data-stage="revealed"] .halo { opacity: 0; }
+    .app[data-stage="revealed"] .brand-name span { color: #737373; }
+    .app[data-stage="revealed"] .brand-seal { color: #222222; border-color: rgba(0,0,0,.4); }
+    .app[data-stage="revealed"] .corner-label { color: #777777; }
+    .app[data-stage="revealed"] .corner-label b { color: #222222; }
+    .app[data-stage="revealed"] .footer-copy { color: #777777; }
+    .app[data-stage="revealed"] .control { color: #343434; border-color: #d1d1d1; background: transparent; }
+    .app[data-stage="revealed"] .control:hover { background: #f1f1f1; }
+    .reveal-kicker { display: inline-flex; align-items: center; justify-content: center; gap: 11px; color: #333333; text-transform: uppercase; font-size: 12px; letter-spacing: .25em; font-weight: 700; margin-bottom: 27px; }
+    .reveal-kicker svg { height: 18px; width: 18px; }
+    .reveal-title { font-size: clamp(65px, 11.4vw, 172px); max-width: 1200px; margin-bottom: 22px; }
+    .reveal-title em { color: #777777; }
+    .reveal-desc { color: #666666; font-size: clamp(15px, 1.5vw, 20px); line-height: 1.6; margin: 0 auto 31px; }
+    .website-link { display: inline-block; color: var(--ink); font-family: "Iowan Old Style", "Baskerville", Georgia, serif; font-size: clamp(31px, 5.3vw, 82px); letter-spacing: -.046em; text-decoration: none; line-height: 1.2; border-bottom: 2px solid #121212; padding: 0 5px 8px; overflow-wrap: anywhere; transition: color 200ms; }
+    .website-link:hover { color: #666666; }
+    .reveal-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .reveal-actions .primary-action { background: var(--ink); color: white; min-width: 225px; }
+    .reveal-actions .primary-action:hover { background: #292929; box-shadow: none; }
+    .secondary-action { display: inline-flex; justify-content: center; align-items: center; background: transparent; padding: 17px 23px; border: 1px solid #cbcbcb; color: #424242; text-transform: uppercase; font-size: 12px; letter-spacing: .08em; font-weight: 650; min-width: 162px; }
+    .secondary-action:hover { background: #eeeeee; }
+    .reveal-note { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; margin-top: 28px; color: #838383; }
+    #confetti { position: absolute; inset: 0; z-index: 11; width: 100%; height: 100%; pointer-events: none; }
+    .flash { position: absolute; z-index: 10; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+    .flash.show { animation: reveal-flash 900ms ease-out both; }
+    @keyframes reveal-flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+    @media (max-width: 700px) {
+      .site-header { padding: 24px 22px 0; }
+      .brand-seal { height: 39px; width: 39px; }
+      .brand-name strong { font-size: 9px; letter-spacing: .08em; }
+      .brand-name span { font-size: 7px; letter-spacing: .14em; }
+      .brand { gap: 10px; }
+      .corner-label { font-size: 8px; letter-spacing: .11em; }
+      .corner-label b { font-size: 8px; letter-spacing: .11em; }
+      .stage-container { min-height: 530px; padding: 38px 20px; }
+      .ready-title { font-size: clamp(55px, 13vw, 82px); }
+      .reveal-title { font-size: clamp(60px, 13vw, 96px); }
+      .countdown-ring { width: min(76vw, 380px); height: min(76vw, 380px); }
+      .countdown-digit { font-size: clamp(130px, 36vw, 230px); }
+      .site-footer { padding: 0 22px 20px; flex-wrap: wrap; }
+      .footer-copy { font-size: 8px; letter-spacing: .09em; }
+      .control { font-size: 10px; padding: 0 9px; }
+      .control span { display: none; }
+      .reveal-note { font-size: 9px; }
+    }
+    @media (max-height: 700px) and (min-width: 701px) {
+      .stage-container { min-height: 430px; padding: 20px; }
+      .ready-title { font-size: clamp(58px, 9vh, 100px); }
+      .countdown-ring { width: min(38vh, 350px); height: min(38vh, 350px); margin-bottom: 18px; }
+      .countdown-digit { font-size: clamp(115px, 25vh, 180px); }
+      .countdown-meta { margin-bottom: 12px; }
+      .tick-track { margin-top: 15px; }
+      .reveal-title { font-size: clamp(58px, 12vh, 120px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    /* An exact LSU logo file can be placed beside this HTML as lsu-logo.webp.
+       A restrained typographic monogram remains visible until then. */
+    .logo-holder { display:grid; place-items:center; flex:none; background:#fff; color:#080808; overflow:hidden; border:1px solid rgba(255,255,255,.6); }
+    .logo-holder img { display:block; width:100%; height:100%; object-fit:contain; padding:4px; filter:grayscale(1); }
+    .logo-holder:not(.has-logo) img { display:none; }
+    .logo-holder.has-logo .logo-fallback { display:none; }
+    .logo-fallback { font-family:Georgia,serif; font-weight:800; font-size:24px; letter-spacing:-.07em; padding-right: .06em; }
+    .brand-mark { width:48px; height:48px; }
+    .hero-logo { width:78px; height:78px; margin:0 auto 24px; border:1px solid #dfdfdf; box-shadow:0 10px 40px rgba(0,0,0,.14); }
+    .hero-logo .logo-fallback { font-size:39px; }
+    .hero-logo img { padding:6px; }
+    .hero-logo.reveal-logo { width:74px; height:74px; margin-bottom:19px; background:#fff; border-color:#cfcfcf; box-shadow: 0 9px 30px rgba(0,0,0,.045); }
+    .ready-desc strong { font-weight:600; color:#fff; }
+    .app[data-stage="revealed"] .brand-mark { border-color:#e5e5e5; }
+    @media (max-width:700px) { .brand-mark { width:40px; height:40px; } .brand-mark .logo-fallback { font-size:20px; } .hero-logo { width:69px; height:69px; margin-bottom:20px; } .hero-logo .logo-fallback { font-size:34px; } .hero-logo.reveal-logo { width:64px; height:64px; margin-bottom:16px; } }
+    @media (max-height:700px) and (min-width:701px) { .hero-logo { width:62px; height:62px; margin-bottom:14px; } .hero-logo .logo-fallback { font-size:31px; } .hero-logo.reveal-logo { width:58px; height:58px; margin-bottom:13px; } }
+  </style>
+</head>
+<body>
+<div class="app" id="app" data-stage="ready">
+  <div class="gridlines" aria-hidden="true"></div>
+  <div class="halo" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="flash" id="flash" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="brand" aria-label="KNUST Law Students’ Union">
+      <div class="brand-mark logo-holder" aria-hidden="true">
+        <img src="lsu-logo.webp" alt="" onload="this.parentElement.classList.add('has-logo')" onerror="this.remove()">
+        <span class="logo-fallback">LSU</span>
+      </div>
+      <div class="brand-name"><strong>KNUST Law Students’ Union</strong><span>Justice and Integrity</span></div>
+    </div>
+    <div class="corner-label">KNUST / Faculty of Law <b>Official website unveiling</b></div>
+  </header>
+
+  <main class="stage-container">
+    <section class="stage stage-ready" aria-labelledby="ready-heading">
+      <div class="hero-logo logo-holder" aria-label="LSU logo">
+        <img src="lsu-logo.webp" alt="LSU official logo" onload="this.parentElement.classList.add('has-logo')" onerror="this.remove()">
+        <span class="logo-fallback" aria-hidden="true">LSU</span>
+      </div>
+      <div class="eyebrow">KNUST Law Students’ Union</div>
+      <div class="hairline"></div>
+      <h1 class="ready-title" id="ready-heading">A new chapter<br><em>begins.</em></h1>
+      <p class="ready-desc">Today, we unveil a new digital home for our community.<br class="desktop-break"> Rooted in <strong>Justice and Integrity.</strong></p>
+      <button class="primary-action" id="start" type="button">
+        Begin the unveiling
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
+      </button>
+      <p class="helper">Press space to begin · Press F for fullscreen</p>
+    </section>
+
+    <section class="stage stage-countdown" aria-label="Launch countdown">
+      <div class="eyebrow countdown-meta">The countdown to a new era</div>
+      <div class="countdown-ring" id="ring" style="--progress:0deg">
+        <span class="countdown-digit" id="digit" aria-hidden="true">10</span>
+      </div>
+      <div class="countdown-caption">Something <strong>extraordinary</strong> begins</div>
+      <div class="tick-track" id="tick-track" aria-hidden="true"></div>
+      <div id="live-count" class="sr-only" aria-live="off" role="status" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">Countdown starting</div>
+    </section>
+
+    <section class="stage stage-reveal" aria-labelledby="reveal-heading">
+      <div class="hero-logo logo-holder reveal-logo" aria-label="LSU logo">
+        <img src="lsu-logo.webp" alt="LSU official logo" onload="this.parentElement.classList.add('has-logo')" onerror="this.remove()">
+        <span class="logo-fallback" aria-hidden="true">LSU</span>
+      </div>
+      <div class="reveal-kicker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+        We are officially live
+      </div>
+      <h1 class="reveal-title" id="reveal-heading">We are <em>live.</em></h1>
+      <p class="reveal-desc">Introducing the official website of the<br class="desktop-break"> KNUST Law Students’ Union.</p>
+      <a class="website-link" href="https://lsu-knust.org" target="_blank" rel="noopener noreferrer" aria-label="Visit lsu-knust.org (opens in a new tab)">lsu-knust.org</a>
+      <div class="reveal-actions">
+        <a class="primary-action" href="https://lsu-knust.org" target="_blank" rel="noopener noreferrer">
+          Explore the website
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+        <button class="secondary-action" id="replay" type="button">Replay countdown</button>
+      </div>
+      <div class="reveal-note">Justice and Integrity</div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-copy">KNUST / Faculty of Law <span aria-hidden="true">&nbsp;·&nbsp;</span> 2026</div>
+    <div class="controls">
+      <button class="control" id="sound" type="button" aria-label="Turn countdown sound on" aria-pressed="false" title="Toggle countdown sound">
+        <svg id="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m17 9 5 6m0-6-5 6"/></svg><span>Sound off</span>
+      </button>
+      <button class="control" id="fullscreen" type="button" aria-label="Enter fullscreen" title="Toggle fullscreen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg><span>Fullscreen</span>
+      </button>
+      <button class="control" id="restart" type="button" aria-label="Reset to opening screen" title="Reset to opening screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3 7M3 4v7h7"/></svg><span>Reset</span>
+      </button>
+    </div>
+  </footer>
+</div>
+<script>
+(() => {
+  'use strict';
+  const app = document.getElementById('app');
+  const digit = document.getElementById('digit');
+  const ring = document.getElementById('ring');
+  const tickTrack = document.getElementById('tick-track');
+  const liveCount = document.getElementById('live-count');
+  const flash = document.getElementById('flash');
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  const soundButton = document.getElementById('sound');
+  let stage = 'ready';
+  let startedAt = 0;
+  let frame = null;
+  let confettiFrame = null;
+  let shownNumber = null;
+  let soundOn = false;
+  let audioContext = null;
+  let confetti = [];
+  const TICK_COUNT = 10;
+  const ticks = [];
+
+  for (let i = 0; i < TICK_COUNT; i++) {
+    const el = document.createElement('span');
+    el.className = 'tick';
+    tickTrack.append(el);
+    ticks.push(el);
+  }
+
+  function getAudioContext() {
+    if (!soundOn) return null;
+    try {
+      audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === 'suspended') audioContext.resume();
+      return audioContext;
+    } catch (_) { return null; }
+  }
+  function tone(frequency, duration, volume) {
+    const audio = getAudioContext();
+    if (!audio) return;
+    try {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      const at = audio.currentTime;
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(frequency, at);
+      gain.gain.setValueAtTime(.0001, at);
+      gain.gain.exponentialRampToValueAtTime(volume, at + .012);
+      gain.gain.exponentialRampToValueAtTime(.0001, at + duration);
+      oscillator.connect(gain).connect(audio.destination);
+      oscillator.start(at);
+      oscillator.stop(at + duration + .02);
+    } catch (_) { /* Sound is optional. */ }
+  }
+  function finalSound() {
+    tone(523.25, .45, .07);
+    setTimeout(() => tone(659.25, .45, .06), 110);
+    setTimeout(() => tone(783.99, .7, .07), 220);
+  }
+  function showNumber(n) {
+    shownNumber = n;
+    digit.textContent = String(n);
+    digit.classList.remove('pulse');
+    void digit.offsetWidth;
+    digit.classList.add('pulse');
+    liveCount.textContent = String(n);
+    tone(n === 1 ? 700 : 510, n === 1 ? .2 : .095, n === 1 ? .07 : .045);
+  }
+  function startCountdown() {
+    if (stage === 'counting') return;
+    cancelAnimationFrame(frame);
+    stopConfetti();
+    stage = 'counting';
+    app.dataset.stage = 'counting';
+    shownNumber = null;
+    ring.style.setProperty('--progress', '0deg');
+    ticks.forEach(tick => tick.classList.remove('complete'));
+    startedAt = performance.now();
+    getAudioContext();
+    showNumber(10);
+    frame = requestAnimationFrame(step);
+  }
+  function step(now) {
+    if (stage !== 'counting') return;
+    const elapsed = Math.max(0, (now - startedAt) / 1000);
+    if (elapsed >= 10) { reveal(); return; }
+    const remaining = 10 - Math.floor(elapsed);
+    if (remaining !== shownNumber) showNumber(remaining);
+    ring.style.setProperty('--progress', (Math.min(elapsed, 10) * 36) + 'deg');
+    const complete = Math.floor(elapsed);
+    ticks.forEach((tick, i) => tick.classList.toggle('complete', i < complete));
+    frame = requestAnimationFrame(step);
+  }
+  function reveal() {
+    if (stage === 'revealed') return;
+    stage = 'revealed';
+    cancelAnimationFrame(frame);
+    app.dataset.stage = 'revealed';
+    flash.classList.remove('show');
+    void flash.offsetWidth;
+    flash.classList.add('show');
+    finalSound();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) startConfetti();
+  }
+  function stopConfetti() {
+    if (confettiFrame) cancelAnimationFrame(confettiFrame);
+    confettiFrame = null;
+    confetti = [];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  function reset() {
+    cancelAnimationFrame(frame);
+    stopConfetti();
+    stage = 'ready';
+    app.dataset.stage = 'ready';
+    shownNumber = null;
+    document.getElementById('start').focus({ preventScroll: true });
+  }
+  function resizeConfetti() {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = app.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * ratio);
+    canvas.height = Math.round(rect.height * ratio);
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  }
+  function startConfetti() {
+    stopConfetti();
+    resizeConfetti();
+    const width = app.clientWidth;
+    const height = app.clientHeight;
+    const palette = ['#111111','#222222','#414141','#656565','#999999','#cacaca'];
+    const count = Math.min(200, Math.max(70, Math.floor(width / 7)));
+    confetti = Array.from({length: count}, () => ({
+      x: Math.random() * width,
+      y: -Math.random() * height * .9 - 15,
+      size: 4 + Math.random() * 7,
+      vy: 1.6 + Math.random() * 3.5,
+      vx: (Math.random() - .5) * 2.3,
+      wave: Math.random() * Math.PI * 2,
+      turn: Math.random() * Math.PI * 2,
+      spin: (Math.random() - .5) * .10,
+      color: palette[Math.floor(Math.random() * palette.length)]
+    }));
+    const begin = performance.now();
+    let last = begin;
+    const draw = now => {
+      if (stage !== 'revealed') return;
+      const dt = Math.min((now - last) / 16.67, 2);
+      last = now;
+      const seconds = (now - begin) / 1000;
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalAlpha = seconds > 5 ? Math.max(0, 1 - (seconds - 5) / 1.4) : 1;
+      for (const p of confetti) {
+        p.y += p.vy * dt;
+        p.x += (p.vx + Math.sin(p.wave + p.y / 30) * .5) * dt;
+        p.turn += p.spin * dt;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.turn); ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/3, p.size, p.size*.65); ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+      if (seconds < 6.4) confettiFrame = requestAnimationFrame(draw);
+      else stopConfetti();
+    };
+    confettiFrame = requestAnimationFrame(draw);
+  }
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (app.requestFullscreen) await app.requestFullscreen();
+    } catch (_) { /* Some embedded browsers disallow fullscreen. */ }
+    updateFullscreenLabel();
+  }
+  function updateFullscreenLabel() {
+    const button = document.getElementById('fullscreen');
+    const active = Boolean(document.fullscreenElement);
+    button.setAttribute('aria-label', active ? 'Exit fullscreen' : 'Enter fullscreen');
+    button.querySelector('span').textContent = active ? 'Exit fullscreen' : 'Fullscreen';
+  }
+  function updateSoundLabel() {
+    soundButton.setAttribute('aria-pressed', String(soundOn));
+    soundButton.setAttribute('aria-label', soundOn ? 'Turn countdown sound off' : 'Turn countdown sound on');
+    soundButton.querySelector('span').textContent = soundOn ? 'Sound on' : 'Sound off';
+    document.getElementById('sound-icon').innerHTML = soundOn
+      ? '<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 9a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/>'
+      : '<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m17 9 5 6m0-6-5 6"/>';
+  }
+  document.getElementById('start').addEventListener('click', startCountdown);
+  document.getElementById('replay').addEventListener('click', startCountdown);
+  document.getElementById('restart').addEventListener('click', reset);
+  document.getElementById('fullscreen').addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', updateFullscreenLabel);
+  soundButton.addEventListener('click', () => { soundOn = !soundOn; if (soundOn) getAudioContext(); updateSoundLabel(); });
+  document.addEventListener('keydown', event => {
+    const tag = document.activeElement?.tagName;
+    if (event.code === 'Space' && tag !== 'BUTTON' && tag !== 'A' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      if (stage === 'ready') { event.preventDefault(); startCountdown(); }
+    }
+    if (event.key.toLowerCase() === 'f' && !event.repeat && !event.altKey && !event.ctrlKey && !event.metaKey && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      event.preventDefault(); toggleFullscreen();
+    }
+    if (event.key === 'Escape' && stage === 'counting' && !document.fullscreenElement) reset();
+  });
+  window.addEventListener('resize', () => { if (stage === 'revealed' && confetti.length) resizeConfetti(); });
+})();
+</script>
+</body>
+</html>
